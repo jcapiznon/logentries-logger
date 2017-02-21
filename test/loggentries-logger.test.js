@@ -1,15 +1,15 @@
 'use strict'
 
 const amqp = require('amqplib')
-
-let should = require('should')
-let cp = require('child_process')
-let _channel = null
-let _conn = null
+const should = require('should')
+const cp = require('child_process')
 
 let loggentriesLogger = null
 
 describe('Logentries Logger', function () {
+  let _channel = null
+  let _conn = null
+
   before('init', () => {
     process.env.PORT = 8081
     process.env.INPUT_PIPE = 'demo.pipe.logger'
@@ -44,10 +44,17 @@ describe('Logentries Logger', function () {
   })
 
   describe('#logJSON', function () {
+    it('handshake', function (done) {
+      this.timeout(5000)
+      loggentriesLogger.on('message', (msg) => {
+        if (msg.type === 'ready') done()
+      })
+    })
+
     it('should process JSON log data', function (done) {
-      let dummyData = {foo: 'bar20'}
-      // console.log(_channel)
+      let dummyData = {foo: 'reekohtest3'}
       _channel.sendToQueue('demo.pipe.logger', new Buffer(JSON.stringify(dummyData)))
+
       done()
     })
   })

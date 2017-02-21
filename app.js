@@ -24,6 +24,7 @@ _plugin.on('log', (logData) => {
     }
 
     loggentriesLogger.log(logLevel, logData)
+    console.log('--d.run--', logLevel, logData)
     d.exit()
   })
 })
@@ -44,4 +45,5 @@ _plugin.once('ready', () => {
   })
 
   _plugin.log('Logentries has been initialized.')
+  process.send({ type: 'ready' })
 })

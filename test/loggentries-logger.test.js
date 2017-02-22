@@ -43,16 +43,16 @@ describe('Logentries Logger', function () {
     })
   })
 
-  describe('#logJSON', function () {
-    it('handshake', function (done) {
-      this.timeout(5000)
+  describe('#handshake', function () {
+    it('should notify the parent process when ready within 8 second', function (done) {
+      this.timeout(8000)
       loggentriesLogger.on('message', (msg) => {
         if (msg.type === 'ready') done()
       })
     })
 
     it('should process JSON log data', function (done) {
-      let dummyData = {foo: 'reekohtest3'}
+      let dummyData = {foo: 'reekohtest'}
       _channel.sendToQueue('demo.pipe.logger', new Buffer(JSON.stringify(dummyData)))
 
       done()

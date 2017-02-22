@@ -5,7 +5,7 @@
     "required": true,
     "help": "Specify your LogEntries token."
   },
-  "log_level": {
+  "logLevel": {
     "label": "Log Level",
     "type": "String",
     "required": false,

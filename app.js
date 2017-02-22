@@ -1,7 +1,8 @@
 'use strict'
 
-let reekoh = require('reekoh')
-let domain = require('domain')
+const reekoh = require('reekoh')
+const domain = require('domain')
+
 let _plugin = new reekoh.plugins.Logger()
 let loggentriesLogger = null
 let level = null
@@ -23,8 +24,16 @@ _plugin.on('log', (logData) => {
       delete logData.level
     }
 
-    loggentriesLogger.log(logLevel, logData)
-    console.log('--d.run--', logLevel, logData)
+    loggentriesLogger.log(logLevel, logData, (error) => {
+      if (error) {
+        console.error('Error on Loggentries.', error)
+        _plugin.logException(error)
+      }
+      _plugin.log(JSON.stringify({
+        title: 'Log sent to Loggentries',
+        data: logData
+      }))
+    })
     d.exit()
   })
 })
@@ -37,7 +46,6 @@ _plugin.once('ready', () => {
   loggentriesLogger = new Logger({
     token: _plugin.config.token
   })
-
 
   loggentriesLogger.on('error', (error) => {
     console.error('Error on Logentries.', error)

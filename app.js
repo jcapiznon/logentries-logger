@@ -2,8 +2,8 @@
 
 const reekoh = require('reekoh')
 const domain = require('domain')
+const _plugin = new reekoh.plugins.Logger()
 
-let _plugin = new reekoh.plugins.Logger()
 let loggentriesLogger = null
 let level = null
 
@@ -39,7 +39,7 @@ _plugin.on('log', (logData) => {
 })
 
 _plugin.once('ready', () => {
-  let Logger = require('le_node')
+  const Logger = require('le_node')
 
   level = _plugin.config.logLevel || 'info'
 
@@ -53,5 +53,7 @@ _plugin.once('ready', () => {
   })
 
   _plugin.log('Logentries has been initialized.')
-  process.send({ type: 'ready' })
+  _plugin.emit('init')
 })
+
+module.exports = _plugin
